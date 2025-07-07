@@ -1,0 +1,257 @@
+import java.util.*;
+
+class Node {
+    int data;
+    Node prev;
+    Node next;
+
+    public Node(int x) {
+        this.data = x;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+public class Main {
+    Node head;
+
+    public void insertbeg(int x) {
+        Node newnode = new Node(x);
+        if (head == null) {
+            head = newnode;
+            head.next = head;
+            head.prev = head;
+        } else {
+            Node tail = head.prev;
+            newnode.next = head;
+            newnode.prev = tail;
+
+            tail.next = newnode;
+            head.prev = newnode;
+            head = newnode;
+        }
+    }
+
+    public void insert(int p, int x) {
+        Node newnode = new Node(x);
+        if (p == 0) {
+            insertbeg(x);
+            return;
+        }
+        int c = 0;
+        Node temp = head;
+        while (temp.next != head && c < p - 1) {
+            temp = temp.next;
+            c++;
+        }
+        if (c < p - 1) {
+            System.out.println("invaild");
+            return;
+        }
+
+        newnode.next = temp.next;
+        newnode.prev = temp;
+
+        temp.next.prev = newnode;
+        temp.next = newnode;
+    }
+
+    public void delete(int p) {
+        if (head == null) {
+            System.out.println("List is empty");
+            return;
+        }
+
+        if (p == 0) {
+            if (head.next == head) {
+                head = null;
+                return;
+            } else {
+                Node tail = head.prev;
+                head = head.next;
+                head.prev = tail;
+                tail.next = head;
+                return;
+            }
+        }
+
+        int c = 0;
+        Node temp = head;
+        while (temp.next != head && c < p) {
+            temp = temp.next;
+            c++;
+        }
+        if (c < p) {
+            System.out.print("Invaild");
+            return;
+        }
+
+        temp.next.prev = temp.prev;
+        temp.prev.next = temp.next;
+    }
+
+    public boolean search(int x) {
+        if (head == null) {
+            return false;
+        }
+
+        Node temp = head;
+
+        while (true) {
+            if (temp.data == x) {
+                return true;
+            }
+            temp = temp.next;
+            if (temp == head) {
+                break;
+            }
+        }
+
+        return false;
+    }
+
+    public void reverse() {
+        if (head == null) {
+            System.out.println("List is empty");
+            return;
+        }
+
+        Node tail = head.prev;
+        Node temp = tail;
+
+        do {
+            System.out.print(temp.data + " ");
+            temp = temp.prev;
+        } while (temp != tail);
+        System.out.println();
+    }
+
+    public void findMiddle() {
+        if (head == null) {
+            System.out.println("List is empty");
+            return;
+        }
+
+        Node slow = head, fast = head;
+
+        while (fast.next != head && fast.next.next != head) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        if (fast.next.next == head) {
+            System.out.println("Middle elements are: " + slow.data + " and " + slow.next.data);
+        } else {
+            System.out.println("Middle element is: " + slow.data);
+        }
+    }
+
+    public void sort() {
+        Node temp = head;
+        if (head == null) return;
+        do {
+            Node c = temp.next;
+            while (c != head) {
+                if (temp.data > c.data) {
+                    int x = temp.data;
+                    temp.data = c.data;
+                    c.data = x;
+                }
+                c = c.next;
+            }
+            temp = temp.next;
+        } while (temp.next != head);
+    }
+
+    public void display() {
+        if (head == null) {
+            System.out.println("List is empty");
+            return;
+        }
+
+        Node temp = head;
+        System.out.print("List: ");
+        do {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        } while (temp != head);
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Main obj = new Main();
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n===== Circular Doubly Linked List Menu =====");
+            System.out.println("1. Insert at beginning");
+            System.out.println("2. Insert at position");
+            System.out.println("3. Delete at position");
+            System.out.println("4. Search");
+            System.out.println("5. Display");
+            System.out.println("6. Reverse");
+            System.out.println("7. Find Middle");
+            System.out.println("8. Sort");
+            System.out.println("0. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter value: ");
+                    int x1 = sc.nextInt();
+                    obj.insertbeg(x1);
+                    break;
+
+                case 2:
+                    System.out.print("Enter position: ");
+                    int p = sc.nextInt();
+                    System.out.print("Enter value: ");
+                    int x2 = sc.nextInt();
+                    obj.insert(p, x2);
+                    break;
+
+                case 3:
+                    System.out.print("Enter position to delete: ");
+                    int dp = sc.nextInt();
+                    obj.delete(dp);
+                    break;
+
+                case 4:
+                    System.out.print("Enter value to search: ");
+                    int s = sc.nextInt();
+                    if (obj.search(s)) {
+                        System.out.println("Element found.");
+                    } else {
+                        System.out.println("Element not found.");
+                    }
+                    break;
+
+                case 5:
+                    obj.display();
+                    break;
+
+                case 6:
+                    obj.reverse();
+                    break;
+
+                case 7:
+                    obj.findMiddle();
+                    break;
+
+                case 8:
+                    obj.sort();
+                    System.out.println("List sorted.");
+                    break;
+
+                case 0:
+                    System.out.println("Exiting...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        } while (choice != 0);
+    }
+}
